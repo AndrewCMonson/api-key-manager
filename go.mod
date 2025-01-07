@@ -1,4 +1,4 @@
-module github.com/AndrewCMonson/apikeymanager
+module github.com/AndrewCMonson/api-key-manager
 
 go 1.23.4
 
