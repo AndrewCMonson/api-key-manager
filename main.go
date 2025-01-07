@@ -59,6 +59,6 @@ func main() {
 	fmt.Printf("Generated API key: %s\n", apiKey)
 
 	if err := pushToSecretsManager(secretName, apiKey, region); err != nil {
-		log.Fatalf("error p")
+		log.Fatalf("error pushing API key to secrets manager: %v", err)
 	}
 }
