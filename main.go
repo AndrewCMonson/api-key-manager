@@ -1,64 +1,73 @@
 package main
 
 import (
-	"context"
-	"crypto/rand"
-	"encoding/hex"
 	"fmt"
-	"log"
 	"os"
 
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
+	envwrite "github.com/AndrewCMonson/api-key-manager/envWrite"
+	secrets "github.com/AndrewCMonson/api-key-manager/secrets"
 )
 
-func generateAPIKey(length int) (string, error) {
-	bytes := make([]byte, length)
-	if _, err := rand.Read(bytes); err != nil {
-		return "", err
-	}
-
-	return hex.EncodeToString(bytes), nil
-}
-
-func pushToSecretsManager(secretName, apiKey, region string) error {
-	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
-
-	if err != nil {
-		return fmt.Errorf("failed to load AWS config: %w", err)
-	}
-
-	client := secretsmanager.NewFromConfig(cfg)
-
-	_, err = client.CreateSecret(context.TODO(), &secretsmanager.CreateSecretInput{
-		Name: 				aws.String(secretName),
-		SecretString: aws.String(apiKey),
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create secret %w", err)
-	}
-
-	fmt.Printf("API key successfully stored in AWS secrets manager under name %s\n", secretName)
-	return nil
-}
-
 func main() {
-	if len(os.Args) < 3 {
-		log.Fatalf("Usage: %s <secret-name> <region>", os.Args[0])
+	// Check if there are enough arguments
+	if len(os.Args) < 2 {
+		fmt.Println("Usage: oscar-secrets <command> <args>")
+		os.Exit(1)
 	}
 
-	secretName := os.Args[1]
-	region := os.Args[2]
+	// Grab the command
+	command := os.Args[1]
 
-	apiKey, err := generateAPIKey(32)
-	if err != nil {
-		log.Fatalf("error generating API key: %v", err)
-	}
+	// Handle each command
+	switch command {
+	case "env":
+		if len(os.Args) != 4 {
+			fmt.Println("Usage: oscar-secrets env <secret-name> <region>")
+			os.Exit(1)
+		}
+		secretName := os.Args[2]
+		region := os.Args[3]
+		if err := envwrite.WriteENVToFile(secretName, region); err != nil {
+			fmt.Println(err.Error())
+			return
+		}
 
-	fmt.Printf("Generated API key: %s\n", apiKey)
+		fmt.Println(".env successfully created/updated")
 
-	if err := pushToSecretsManager(secretName, apiKey, region); err != nil {
-		log.Fatalf("error pushing API key to secrets manager: %v", err)
+	case "create":
+		if len(os.Args) != 6 {
+			fmt.Println("Usage: oscar-secrets create <secret-name> <region> <key> <value>")
+			os.Exit(1)
+		}
+		secretName := os.Args[2]
+		region := os.Args[3]
+		key := os.Args[4]
+		value := os.Args[5]
+		secrets.PushNewToSecretsManager(secretName, region, key, value)
+
+	// case "update":
+	// 	if len(os.Args) != 6 {
+	// 		fmt.Println("Usage: oscar-secrets update <secret-name> <region> <key> <value>")
+	// 		os.Exit(1)
+	// 	}
+	// 	secretName := os.Args[2]
+	// 	region := os.Args[3]
+	// 	key := os.Args[4]
+	// 	value := os.Args[5]
+	// 	handleUpdate(secretName, region, key, value)
+
+	// case "apiGen":
+	// 	if len(os.Args) != 4 {
+	// 		fmt.Println("Usage: oscar-secrets apiGen <secret-name> <region>")
+	// 		os.Exit(1)
+	// 	}
+	// 	secretName := os.Args[2]
+	// 	region := os.Args[3]
+	// 	handleApiGen(secretName, region)
+
+	default:
+		fmt.Printf("Unknown command: %s\n", command)
+		fmt.Println("Available commands: env, create, update, apiGen")
+		os.Exit(1)
 	}
 }
