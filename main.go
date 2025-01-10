@@ -28,8 +28,8 @@ func main() {
 		secretName := os.Args[2]
 		region := os.Args[3]
 		if err := envwrite.WriteENVToFile(secretName, region); err != nil {
-			fmt.Println(err.Error())
-			return
+			fmt.Printf("Error: %v\n", err)
+			os.Exit(1)
 		}
 
 		fmt.Println(".env successfully created/updated")
@@ -43,20 +43,30 @@ func main() {
 		region := os.Args[3]
 		key := os.Args[4]
 		value := os.Args[5]
-		secrets.PushNewToSecretsManager(secretName, region, key, value)
+		if err := secrets.CreateNewAWSSecret(secretName, region, key, value); err != nil {
+			fmt.Printf("Error: %v\n", err)
+			os.Exit(1)
+		}
 
-	// case "update":
-	// 	if len(os.Args) != 6 {
-	// 		fmt.Println("Usage: oscar-secrets update <secret-name> <region> <key> <value>")
-	// 		os.Exit(1)
-	// 	}
-	// 	secretName := os.Args[2]
-	// 	region := os.Args[3]
-	// 	key := os.Args[4]
-	// 	value := os.Args[5]
-	// 	handleUpdate(secretName, region, key, value)
+		fmt.Printf("Secret successfully created in AWS Secrets Manager under name %s\n", secretName)
 
-	// case "apiGen":
+	case "update":
+		if len(os.Args) != 6 {
+			fmt.Println("Usage: oscar-secrets update <secret-name> <region> <key> <value>")
+			os.Exit(1)
+		}
+		secretName := os.Args[2]
+		region := os.Args[3]
+		key := os.Args[4]
+		value := os.Args[5]
+		if err := secrets.AddOrUpdateExistingSecret(secretName, region, key, value); err != nil {
+			fmt.Printf("Error: %v\n", err)
+			os.Exit(1)
+		}
+
+		fmt.Printf("Secret successfully updated in AWS Secrets Manager under name %s\n", secretName)
+
+	// case "apiKeyGen":
 	// 	if len(os.Args) != 4 {
 	// 		fmt.Println("Usage: oscar-secrets apiGen <secret-name> <region>")
 	// 		os.Exit(1)
@@ -67,7 +77,7 @@ func main() {
 
 	default:
 		fmt.Printf("Unknown command: %s\n", command)
-		fmt.Println("Available commands: env, create, update, apiGen")
+		fmt.Println("Available commands: env, create, update")
 		os.Exit(1)
 	}
 }

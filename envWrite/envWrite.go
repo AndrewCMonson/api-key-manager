@@ -21,7 +21,7 @@ type AWSSecret struct {
 // A "secret" and either be just a plaintext value or contain key value pairs
 // 
 // This function is meant to be used with a secret that contains key value pairs
-// if used with a plaintext, it will throw an error explaining
+// if used with a plaintext, it will throw an error explaining the cli took isn't compatible
 func getSecretFromSM(secretName, region string) (secret AWSSecret, err error) {
 	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
 	if err != nil {
@@ -65,8 +65,6 @@ func WriteENVToFile(secretName, region string) error {
 			return fmt.Errorf("error writing to .env file: %w", err)
 		}
 	}
-
-	
 
 	return nil
 }
