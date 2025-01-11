@@ -66,7 +66,7 @@ func main() {
 
 		fmt.Printf("Secret successfully updated in AWS Secrets Manager under name %s\n", secretName)
 
-	case "apiKeyGen":
+	case "apikey":
 		if len(os.Args) != 2 {
 			fmt.Println("Usage: oscarcli apiKeyGen")
 			os.Exit(1)
