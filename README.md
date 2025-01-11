@@ -6,16 +6,11 @@ Oscar CLI is a command-line tool for managing AWS Secrets Manager secrets. It al
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/AndrewCMonson/api-key-manager.git
-    cd api-key-manager
+    go install github.com/AndrewCMonson/oscarcli
     ```
-
-2. Install dependencies:
-    ```sh
-    go mod tidy
-    ```
-
 ## Usage
+
+- You must have configured AWS credentials on your machine. You can do this by running `aws configure` and following the prompts.
 
 ### Commands
 
@@ -34,9 +29,9 @@ Oscar CLI is a command-line tool for managing AWS Secrets Manager secrets. It al
     oscarcli update <secret-name> <region> <key> <value>
     ```
 
-- `apiKeyGen`: Generate a new API key and update the `oscar-api` secret in AWS Secrets Manager.
+- `apikey`: Generate a new API key and update the `oscar-api` secret in AWS Secrets Manager. Key length must be a valid integer.
     ```sh
-    oscarcli apikey
+    oscarcli apikey <key-length>
     ```
 
 ### Examples
@@ -58,7 +53,7 @@ Oscar CLI is a command-line tool for managing AWS Secrets Manager secrets. It al
 
 - Generate a new API key:
     ```sh
-    oscarcli apikey
+    oscarcli apikey 32
     ```
 
 ## License
