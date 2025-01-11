@@ -22,7 +22,7 @@ func main() {
 	switch command {
 	case "env":
 		if len(os.Args) != 4 {
-			fmt.Println("Usage: oscar-secrets env <secret-name> <region>")
+			fmt.Println("Usage: oscarcli env <secret-name> <region>")
 			os.Exit(1)
 		}
 		secretName := os.Args[2]
@@ -36,7 +36,7 @@ func main() {
 
 	case "create":
 		if len(os.Args) != 6 {
-			fmt.Println("Usage: oscar-secrets create <secret-name> <region> <key> <value>")
+			fmt.Println("Usage: oscarcli create <secret-name> <region> <key> <value>")
 			os.Exit(1)
 		}
 		secretName := os.Args[2]
@@ -52,7 +52,7 @@ func main() {
 
 	case "update":
 		if len(os.Args) != 6 {
-			fmt.Println("Usage: oscar-secrets update <secret-name> <region> <key> <value>")
+			fmt.Println("Usage: oscarcli update <secret-name> <region> <key> <value>")
 			os.Exit(1)
 		}
 		secretName := os.Args[2]
@@ -68,7 +68,7 @@ func main() {
 
 	case "apiKeyGen":
 		if len(os.Args) != 2 {
-			fmt.Println("Usage: oscar-secrets apiKeyGen")
+			fmt.Println("Usage: oscarcli apiKeyGen")
 			os.Exit(1)
 		}
 		if err := secrets.HandleAPIGen(); err != nil {
