@@ -12,7 +12,8 @@ URL="https://github.com/AndrewCMonson/repo/releases/latest/download/$BINARY"
 if [[ "$OS" == *"mingw"* || "$OS" == *"msys"* || "$OS" == "windows" ]]; then
   OS="windows"
   URL="https://github.com/AndrewCMonson/repo/releases/latest/download/oscarcli-windows.exe"
-  DESTINATION="$HOME\\oscarcli.exe"
+  DESTINATION="$HOME/bin/oscarcli.exe"
+
 else
   DESTINATION="/usr/local/bin/oscarcli"
 fi
@@ -30,8 +31,7 @@ fi
 
 # Success message
 if [[ "$OS" == "windows" ]]; then
-  echo "Installation complete. Run '$DESTINATION' to get started."
-  echo "You may want to add the executable's directory to your PATH."
+  echo "Installation complete. Run 'oscarcli' from the Command Prompt or PowerShell."
 else
-  echo "Installation complete. Run 'oscarcli --version' to verify installation."
+  echo "Installation complete. Run 'oscarcli' to get started."
 fi
