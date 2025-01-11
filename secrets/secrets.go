@@ -1,4 +1,4 @@
-package apikeygen
+package secrets
 
 import (
 	// "bufio"

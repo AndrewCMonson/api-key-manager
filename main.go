@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	envwrite "github.com/AndrewCMonson/api-key-manager/envWrite"
-	secrets "github.com/AndrewCMonson/api-key-manager/secrets"
+	envwrite "github.com/AndrewCMonson/oscarcli/envWrite"
+	"github.com/AndrewCMonson/oscarcli/secrets"
 )
 
 func main() {
