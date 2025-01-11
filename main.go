@@ -66,18 +66,22 @@ func main() {
 
 		fmt.Printf("Secret successfully updated in AWS Secrets Manager under name %s\n", secretName)
 
-	// case "apiKeyGen":
-	// 	if len(os.Args) != 4 {
-	// 		fmt.Println("Usage: oscar-secrets apiGen <secret-name> <region>")
-	// 		os.Exit(1)
-	// 	}
-	// 	secretName := os.Args[2]
-	// 	region := os.Args[3]
-	// 	handleApiGen(secretName, region)
+	case "apiKeyGen":
+		if len(os.Args) != 2 {
+			fmt.Println("Usage: oscar-secrets apiKeyGen")
+			os.Exit(1)
+		}
+		if err := secrets.HandleAPIGen(); err != nil {
+			fmt.Printf("Error: %v\n", err)
+			os.Exit(1)
+		}
+	
+		fmt.Printf("Oscar API key successfully updated!")
 
 	default:
 		fmt.Printf("Unknown command: %s\n", command)
 		fmt.Println("Available commands: env, create, update")
 		os.Exit(1)
 	}
+
 }

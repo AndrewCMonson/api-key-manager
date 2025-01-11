@@ -3,8 +3,8 @@ package apikeygen
 import (
 	// "bufio"
 	"context"
-	// "crypto/rand"
-	// "encoding/hex"
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -17,14 +17,14 @@ import (
 
 type AWSSecretKeyValue map[string]string
 
-// func generateAPIKey(length int) (string, error) {
-// 	bytes := make([]byte, length)
-// 	if _, err := rand.Read(bytes); err != nil {
-// 		return "", err
-// 	}
+func generateAPIKey(length int) (string, error) {
+	bytes := make([]byte, length)
+	if _, err := rand.Read(bytes); err != nil {
+		return "", err
+	}
 
-// 	return hex.EncodeToString(bytes), nil
-// }
+	return hex.EncodeToString(bytes), nil
+}
 
 func CreateNewAWSSecret(secretName, region, key, value string) error {
   cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
@@ -50,7 +50,6 @@ func CreateNewAWSSecret(secretName, region, key, value string) error {
 		return fmt.Errorf("failed to create secret %w", err)
 	}
 
-	fmt.Printf("Secret successfully stored in AWS secrets manager under name %s\n", secretName)
 	return nil
 }
 
@@ -101,28 +100,16 @@ func AddOrUpdateExistingSecret(secretName, region, key, value string) error {
 
 	return nil
 }
-// func GenerateAndPushSecret() {
-// 	if len(os.Args) < 5 {
-// 		log.Fatalf("Usage: %s <secret-name> <region>", os.Args[0])
-// 	}
 
-// 	var storedSecret AWSSecretKeyValue
+func HandleAPIGen() error {
+	apiKey, err := generateAPIKey(32)
+	if err != nil {
+		return fmt.Errorf("error generating API key: %v", err)
+	}
 
-// 	secretName := os.Args[1]
-// 	region := os.Args[2]
-// 	storedSecret.Key = os.Args[3]
-// 	storedSecret.Value = os.Args[4]
+	if err := AddOrUpdateExistingSecret("oscar-api", "us-east-1", "OSCAR-API-KEY", apiKey); err != nil {
+		return fmt.Errorf("error: %v", err)
+	}
 
-// 	// apiKey, err := generateAPIKey(32)
-// 	// if err != nil {
-// 	// 	log.Fatalf("error generating API key: %v", err)
-// 	// }
-
-// 	// fmt.Printf("Generated API key: %s\n", apiKey)
-
-// 	if err := PushNewToSecretsManager(secretName, region, storedSecret); err != nil {
-// 		log.Fatalf("error pushing secret to secrets manager: %v", err)
-// 	}
-
-// 	fmt.Println("Secret Generated and Pushed to AWS Secrets Manager")
-// }
+	return nil
+}
