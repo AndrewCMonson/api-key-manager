@@ -36,7 +36,7 @@ Oscar CLI is a command-line tool for managing AWS Secrets Manager secrets. It al
 
 - `apiKeyGen`: Generate a new API key and update the `oscar-api` secret in AWS Secrets Manager.
     ```sh
-    oscarcli apiKeyGen
+    oscarcli apikey
     ```
 
 ### Examples
