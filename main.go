@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 
 	envwrite "github.com/AndrewCMonson/oscarcli/envWrite"
 	"github.com/AndrewCMonson/oscarcli/secrets"
@@ -67,11 +68,19 @@ func main() {
 		fmt.Printf("Secret successfully updated in AWS Secrets Manager under name %s\n", secretName)
 
 	case "apikey":
-		if len(os.Args) != 2 {
-			fmt.Println("Usage: oscarcli apiKeyGen")
+		if len(os.Args) != 3 {
+			fmt.Println("Usage: oscarcli apiKeyGen <key-length(int)>")
 			os.Exit(1)
 		}
-		if err := secrets.HandleAPIGen(); err != nil {
+
+		lengthParam := os.Args[2]
+
+		length, err := strconv.Atoi(lengthParam)
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
+			os.Exit(1)
+		}
+		if err := secrets.HandleAPIGen(length); err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
 		}

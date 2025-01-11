@@ -7,7 +7,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -39,7 +38,7 @@ func CreateNewAWSSecret(secretName, region, key, value string) error {
 	client := secretsmanager.NewFromConfig(cfg)
 	secretJson, err := json.Marshal(secretValue)
 	if err != nil {
-		log.Fatalf("error converting secret to json: %v", err)
+		return fmt.Errorf("error converting secret to json: %v", err)
 	}
 
 	_, err = client.CreateSecret(context.TODO(), &secretsmanager.CreateSecretInput{
@@ -101,8 +100,8 @@ func AddOrUpdateExistingSecret(secretName, region, key, value string) error {
 	return nil
 }
 
-func HandleAPIGen() error {
-	apiKey, err := generateAPIKey(32)
+func HandleAPIGen(length int) error {
+	apiKey, err := generateAPIKey(length)
 	if err != nil {
 		return fmt.Errorf("error generating API key: %v", err)
 	}
