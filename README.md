@@ -1,21 +1,49 @@
-# Oscar CLI
+# OscarCLI
 
-Oscar CLI is a command-line tool for managing AWS Secrets Manager secrets. It allows you to create, update, and retrieve secrets, as well as generate API keys. It is also used to write secrets to a [.env](http://_vscodecontentref_/0) file for use in local development.
+OscarCLI is a command-line tool for managing AWS Secrets Manager secrets. It allows you to create, update, and retrieve secrets, as well as generate API keys. It is also used to write secrets to a [.env](http://_vscodecontentref_/0) file for use in local development.
 
 ## Installation
 
-1. Clone the repository:
+### Using cURL
+
+1. Run the following command to download and install OscarCLI:
     ```sh
-    go install github.com/AndrewCMonson/oscarcli
+    curl -sL https://raw.githubusercontent.com/AndrewCMonson/oscarcli/main/install.sh | bash
     ```
+
+### Using Go
+
+1. If Go is already installed, run the following command to install OscarCLI:
+    ```sh
+    go install github.com/AndrewCMonson/oscarcli@latest
+    ```
+
+### Manual Installation
+
+1. If Go is not installed, go to the [Releases Page](https://github.com/username/repo/releases).
+   - Download the binary for your operating system:
+     - **Linux**: `oscarcli-linux`
+     - **MacOS**: `oscarcli-darwin`
+     - **Windows**: `oscarcli-windows.exe`
+   
+2. Move the binary to a directory in your `PATH` and make it executable:
+   - **Linux/MacOS**:
+     ```bash
+     mv oscarcli-linux /usr/local/bin/oscarcli
+     chmod +x /usr/local/bin/oscarcli
+     ```
+   - **Windows**:
+     Rename `oscarcli-windows.exe` to `oscarcli.exe` and move it to `C:\Windows\System32`.
+
+3. Verify the installation by running `oscarcli --version or oscarcli -v`.
+
 ## Usage
 
+- As of version 1.1.0, OscarCLI requires a Go installation to run. You can install Go from the [official website](https://golang.org/dl/).
+- The current executable is built for Windows.
 - You must have configured AWS credentials on your machine. You can do this by running `aws configure` and following the prompts.
-
 - As of version 1.2.0, OscarCLI uses the credentials for AWS of the user running the command. This means that the user must have the necessary permissions to create, update, and retrieve secrets in AWS Secrets Manager.
-
 - Using the `apikey` command will update the user's `oscar-api` secret in AWS Secrets Manager. This will not update the master API key used by the Oscar API. Future versions of OscarCLI will include the ability to update the master API key, locked behind credential verification.
-
 - When using the `env` command, the `.env` file will be created in the current working directory. If the file already exists, it will be overwritten.
 
 ### Commands

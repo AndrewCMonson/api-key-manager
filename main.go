@@ -9,6 +9,8 @@ import (
 	"github.com/AndrewCMonson/oscarcli/secrets"
 )
 
+const version = "1.2.0"
+
 func main() {
 	// Check if there are enough arguments
 	if len(os.Args) < 2 {
@@ -18,6 +20,12 @@ func main() {
 
 	// Grab the command
 	command := os.Args[1]
+
+	// Handle version flag
+	if command == "--version" || command == "-v" {
+		fmt.Printf("oscarcli version %s\n", version)
+		os.Exit(0)
+	}
 
 	// Handle each command
 	switch command {
@@ -84,13 +92,12 @@ func main() {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
 		}
-	
+
 		fmt.Printf("Oscar API key successfully updated!")
 
 	default:
 		fmt.Printf("Unknown command: %s\n", command)
-		fmt.Println("Available commands: env, create, update")
+		fmt.Println("Available commands: env, create, update, apikey")
 		os.Exit(1)
 	}
-
 }
