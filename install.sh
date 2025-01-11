@@ -12,7 +12,7 @@ URL="https://github.com/AndrewCMonson/repo/releases/latest/download/$BINARY"
 if [[ "$OS" == *"mingw"* || "$OS" == *"msys"* || "$OS" == "windows" ]]; then
   OS="windows"
   URL="https://github.com/AndrewCMonson/repo/releases/latest/download/oscarcli-windows.exe"
-  DESTINATION="$HOME/bin/oscarcli.exe"
+  DESTINATION="$HOME/oscarcli.exe"
 
 else
   DESTINATION="/usr/local/bin/oscarcli"
