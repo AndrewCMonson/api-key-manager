@@ -45,7 +45,7 @@ func main() {
 		fmt.Println(".env successfully created/updated")
 	case "env-set":
 		if len(os.Args) != 5 {
-			fmt.Println("Usage: oscarcli env-set <secret-name> <region> ")
+			fmt.Println("Usage: oscarcli env-set <secret-name> <region> <env-file-path>")
 			os.Exit(1)
 		}
 
@@ -56,6 +56,8 @@ func main() {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
 		}
+
+		fmt.Println("AWS Secrets Manager successfully updated")
 	case "create":
 		if len(os.Args) != 6 {
 			fmt.Println("Usage: oscarcli create <secret-name> <region> <key> <value>")
