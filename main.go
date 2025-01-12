@@ -5,8 +5,8 @@ import (
 	"os"
 	"strconv"
 
-	envwrite "github.com/AndrewCMonson/oscarcli/envWrite"
 	"github.com/AndrewCMonson/oscarcli/envread"
+	"github.com/AndrewCMonson/oscarcli/envwrite"
 	"github.com/AndrewCMonson/oscarcli/secrets"
 )
 
