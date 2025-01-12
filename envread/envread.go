@@ -65,7 +65,7 @@ func LoadEnvFile(filePath string) (map[string]string, error) {
 func UpdateSecretsFromEnvFile(secretname, region, filePath string) error {
 	envVars, err := LoadEnvFile(filePath)
 	if err != nil {
-		return fmt.Errorf("failed to load .env file: %w", err)
+		return fmt.Errorf("failed to load .env file %s: %w", filePath, err)
 	}
 
 	for key, value := range envVars {
