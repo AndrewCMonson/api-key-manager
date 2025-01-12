@@ -77,7 +77,11 @@ OscarCLI is a command-line tool for managing AWS Secrets Manager secrets. It all
 
 - Retrieve a secret and write it to a [.env](http://_vscodecontentref_/2) file:
     ```sh
-    oscarcli env my-secret us-east-1
+    oscarcli env-get my-secret us-east-1
+    ```
+- Write a .env file to AWS Secrets Manager:
+    ```sh
+    oscarcli env-set my-secret us-east-1 /path/to/.env
     ```
 
 - Generate a new API key:
