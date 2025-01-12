@@ -2,7 +2,11 @@
 
 # Output directory
 OUTPUT_DIR="build"
-PLATFORMS=("linux/amd64" "darwin/amd64" "windows/amd64")
+PLATFORMS=(
+  "linux/amd64" "linux/arm64" "linux/386"
+  "darwin/amd64" "darwin/arm64"
+  "windows/amd64" "windows/386"
+)
 
 # Create the output directory
 mkdir -p $OUTPUT_DIR
@@ -13,7 +17,7 @@ for PLATFORM in "${PLATFORMS[@]}"; do
   GOARCH=${PLATFORM#*/} # Extract ARCH (e.g., "amd64")
 
   # Set the output file name
-  OUTPUT_NAME="oscarcli-$GOOS"
+  OUTPUT_NAME="oscarcli-$GOOS-$GOARCH"
   if [ "$GOOS" == "windows" ]; then
     OUTPUT_NAME+=".exe"
   fi
