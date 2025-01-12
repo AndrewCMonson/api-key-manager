@@ -44,15 +44,19 @@ OscarCLI is a command-line tool for managing AWS Secrets Manager secrets. It all
 - You must have configured AWS credentials on your machine. You can do this by running `aws configure` and following the prompts.
 - As of version 1.2.0, OscarCLI uses the credentials for AWS of the user running the command. This means that the user must have the necessary permissions to create, update, and retrieve secrets in AWS Secrets Manager.
 - Using the `apikey` command will update the user's `oscar-api` secret in AWS Secrets Manager. This will not update the master API key used by the Oscar API. Future versions of OscarCLI will include the ability to update the master API key, locked behind credential verification.
-- When using the `env` command, the `.env` file will be created in the current working directory. If the file already exists, it will be overwritten.
+- When using the `env-get` command, the `.env` file will be created in the current working directory. If the file already exists, it will be overwritten.
+- When using the `env-set` command, the `.env` file will be read from the specified path. If the file does not exist, an error will be thrown.
 
 ### Commands
 
-- `env`: Retrieve a secret from AWS Secrets Manager and write it to a [.env](http://_vscodecontentref_/1) file.
+- `env-get`: Retrieve a secret from AWS Secrets Manager and write it to a [.env](http://_vscodecontentref_/1) file.
     ```sh
     oscarcli env <secret-name> <region>
     ```
-
+- `env-set`: Write a .env file to AWS Secrets Manager.
+    ```sh
+    oscarcli env-set <secret-name> <region> <env-file-path>
+    ```
 - `create`: Create a new secret in AWS Secrets Manager.
     ```sh
     oscarcli create <secret-name> <region> <key> <value>

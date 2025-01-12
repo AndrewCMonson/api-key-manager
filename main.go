@@ -6,10 +6,11 @@ import (
 	"strconv"
 
 	envwrite "github.com/AndrewCMonson/oscarcli/envWrite"
+	"github.com/AndrewCMonson/oscarcli/envread"
 	"github.com/AndrewCMonson/oscarcli/secrets"
 )
 
-const version = "1.2.4"
+const version = "1.3.0"
 
 func main() {
 	// Check if there are enough arguments
@@ -29,9 +30,9 @@ func main() {
 
 	// Handle each command
 	switch command {
-	case "env":
+	case "env-get":
 		if len(os.Args) != 4 {
-			fmt.Println("Usage: oscarcli env <secret-name> <region>")
+			fmt.Println("Usage: oscarcli env-get <secret-name> <region>")
 			os.Exit(1)
 		}
 		secretName := os.Args[2]
@@ -42,7 +43,19 @@ func main() {
 		}
 
 		fmt.Println(".env successfully created/updated")
+	case "env-set":
+		if len(os.Args) != 5 {
+			fmt.Println("Usage: oscarcli env-set <secret-name> <region> ")
+			os.Exit(1)
+		}
 
+		secretName := os.Args[2]
+		region := os.Args[3]
+		filePath := os.Args[4]
+		if err := envread.UpdateSecretsFromEnvFile(secretName, region, filePath); err != nil {
+			fmt.Printf("Error: %v\n", err)
+			os.Exit(1)
+		}
 	case "create":
 		if len(os.Args) != 6 {
 			fmt.Println("Usage: oscarcli create <secret-name> <region> <key> <value>")
@@ -97,7 +110,7 @@ func main() {
 
 	default:
 		fmt.Printf("Unknown command: %s\n", command)
-		fmt.Println("Available commands: env, create, update, apikey")
+		fmt.Println("Available commands: env-get, env-set, create, update, apikey")
 		os.Exit(1)
 	}
 }
