@@ -14,7 +14,7 @@ const version = "1.2.4"
 func main() {
 	// Check if there are enough arguments
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: oscar-secrets <command> <args>")
+		fmt.Println("Usage: oscarcli <command> <args>")
 		os.Exit(1)
 	}
 
