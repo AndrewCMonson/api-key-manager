@@ -37,6 +37,7 @@ func main() {
 		}
 		secretName := os.Args[2]
 		region := os.Args[3]
+
 		if err := envwrite.WriteENVToFile(secretName, region); err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
@@ -52,21 +53,40 @@ func main() {
 		secretName := os.Args[2]
 		region := os.Args[3]
 		filePath := os.Args[4]
+
 		if err := envread.UpdateSecretsFromEnvFile(secretName, region, filePath); err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
 		}
 
 		fmt.Println("AWS Secrets Manager successfully updated")
+	case "env-create":
+		if len(os.Args) != 5 {
+			fmt.Println("Usage: oscarcli env-create <secret-name> <region> <env-file-path>")
+		}
+
+		secretName := os.Args[2]
+		region := os.Args[3]
+		filePath := os.Args[4]
+
+		if err := envread.CreateAndWriteSecretsFromEnv(secretName, region, filePath); err != nil {
+			fmt.Printf("Error: %v\n", err)
+			os.Exit(1)
+		}
+
+		fmt.Printf("Successfully created new AWS Secret with .env values named %s\n", secretName)
+
 	case "create":
 		if len(os.Args) != 6 {
 			fmt.Println("Usage: oscarcli create <secret-name> <region> <key> <value>")
 			os.Exit(1)
 		}
+
 		secretName := os.Args[2]
 		region := os.Args[3]
 		key := os.Args[4]
 		value := os.Args[5]
+
 		if err := secrets.CreateNewAWSSecret(secretName, region, key, value); err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
@@ -79,10 +99,12 @@ func main() {
 			fmt.Println("Usage: oscarcli update <secret-name> <region> <key> <value>")
 			os.Exit(1)
 		}
+
 		secretName := os.Args[2]
 		region := os.Args[3]
 		key := os.Args[4]
 		value := os.Args[5]
+
 		if err := secrets.AddOrUpdateExistingSecret(secretName, region, key, value); err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
@@ -92,7 +114,7 @@ func main() {
 
 	case "apikey":
 		if len(os.Args) != 3 {
-			fmt.Println("Usage: oscarcli apiKeyGen <key-length(int)>")
+			fmt.Println("Usage: oscarcli apikey <key-length(int)>")
 			os.Exit(1)
 		}
 
@@ -103,16 +125,17 @@ func main() {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
 		}
+
 		if err := secrets.HandleAPIGen(length); err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
 		}
 
 		fmt.Printf("Oscar API key successfully updated!")
-
-	default:
+	
+		default:
 		fmt.Printf("Unknown command: %s\n", command)
-		fmt.Println("Available commands: env-get, env-set, create, update, apikey")
+		fmt.Println("Available commands: env-get, env-set, env-create, create, update, apikey")
 		os.Exit(1)
 	}
 }

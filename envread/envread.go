@@ -3,11 +3,16 @@ package envread
 import (
 	// "encoding/json"
 	"bufio"
+	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
 
 	"github.com/AndrewCMonson/oscarcli/secrets"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 )
 
 // LoadEnvFile reads a .env file from the specified file path and returns a map of environment variables.
@@ -75,5 +80,43 @@ func UpdateSecretsFromEnvFile(secretname, region, filePath string) error {
 		}
 	}
 
+	return nil
+}
+
+// load env file
+// create the secret via func arg secret name
+// run UpdateSecretsFromEnvFile
+
+func CreateAndWriteSecretsFromEnv(secretname, region, filePath string) error {
+	envVars, err := LoadEnvFile(filePath)
+	if err != nil {
+		return fmt.Errorf("failed to load .env file %s: %w", filePath, err)
+	}
+
+	fmt.Printf("Creating secret %s\n", secretname)
+
+	for key, value := range envVars {
+		fmt.Printf("Adding secret: %s=%s\n", key, value)
+	}
+
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
+	if err != nil {
+		return fmt.Errorf("failed to load AWS config: %w", err)
+	}
+
+	client := secretsmanager.NewFromConfig(cfg)
+	secretJson, err := json.Marshal(envVars)
+	if err != nil {
+		return fmt.Errorf("error converting secret values to json: %w", err)
+	}
+
+	_, err = client.CreateSecret(context.TODO(), &secretsmanager.CreateSecretInput{
+		Name: aws.String(secretname),
+		SecretString: aws.String(string(secretJson)),
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create secret with values: %w", err)
+	}
+	
 	return nil
 }

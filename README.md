@@ -48,6 +48,10 @@ OscarCLI is a command-line tool for managing AWS Secrets Manager secrets. It all
     ```sh
     oscarcli env-set <secret-name> <region> <env-file-path>
     ```
+- `env-create`: Create a new AWS Secret and populate it with a .env file's contents.
+    ```sh
+    oscarcli env-create <secret-name> <region> <env-file-path>
+    ```
 - `create`: Create a new secret in AWS Secrets Manager.
     ```sh
     oscarcli create <secret-name> <region> <key> <value>
@@ -79,9 +83,15 @@ OscarCLI is a command-line tool for managing AWS Secrets Manager secrets. It all
     ```sh
     oscarcli env-get my-secret us-east-1
     ```
+
 - Write a .env file to AWS Secrets Manager:
     ```sh
     oscarcli env-set my-secret us-east-1 /path/to/.env
+    ```
+
+- Create a new secret and populate it with a .env file's contents:
+    ```sh
+    oscarcli env-create my-secret us-east-1 /path/to/.env
     ```
 
 - Generate a new API key:
