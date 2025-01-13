@@ -16,6 +16,7 @@ import (
 
 type AWSSecretKeyValue map[string]string
 
+// TODO: this should be updated to add more secure generation AKA encryption
 func generateAPIKey(length int) (string, error) {
 	bytes := make([]byte, length)
 	if _, err := rand.Read(bytes); err != nil {

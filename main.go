@@ -113,6 +113,7 @@ func main() {
 
 		fmt.Printf("Secret successfully updated in AWS Secrets Manager under name %s\n", secretName)
 
+	// TODO: This should be updated to allow for api key generation regardless of secret name
 	case "apikey":
 		if len(os.Args) != 3 {
 			fmt.Println("Usage: oscarcli apikey <key-length(int)>")
