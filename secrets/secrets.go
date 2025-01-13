@@ -4,8 +4,9 @@ import (
 	// "bufio"
 	"context"
 	"crypto/rand"
-	"encoding/hex"
+	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -16,14 +17,19 @@ import (
 
 type AWSSecretKeyValue map[string]string
 
-// TODO: this should be updated to add more secure generation AKA encryption
 func generateAPIKey(length int) (string, error) {
-	bytes := make([]byte, length)
+	if length <= 31 {
+		return "", errors.New("recommend a length of at least 32 for api key generation")
+	}
+
+	rawLength := (length * 6 + 7) / 8
+	bytes := make([]byte, rawLength)
 	if _, err := rand.Read(bytes); err != nil {
 		return "", err
 	}
 
-	return hex.EncodeToString(bytes), nil
+	key := base64.URLEncoding.EncodeToString(bytes)
+	return key[:length], nil
 }
 
 func CreateNewAWSSecret(secretName, region, key, value string) error {
