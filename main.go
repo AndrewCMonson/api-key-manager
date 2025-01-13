@@ -63,6 +63,7 @@ func main() {
 	case "env-create":
 		if len(os.Args) != 5 {
 			fmt.Println("Usage: oscarcli env-create <secret-name> <region> <env-file-path>")
+			os.Exit(1)
 		}
 
 		secretName := os.Args[2]
