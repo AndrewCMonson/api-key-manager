@@ -36,15 +36,15 @@ func getSecretFromSM(secretName, region string) (secret AWSSecret, err error) {
 		return AWSSecret{}, fmt.Errorf("failed to get secret value %w", err)
 	}
 
-	secrets := AWSSecret{
+	secret = AWSSecret{
 		Name: *result.Name,
 		Value: *result.SecretString,
 	}
 
-	secrets.Name = *result.Name
-	secrets.Value = *result.SecretString
+	secret.Name = *result.Name
+	secret.Value = *result.SecretString
 
-	return secrets, nil
+	return secret, nil
 }
 
 func WriteENVToFile(secretName, region string) error {

@@ -115,7 +115,7 @@ func main() {
 
 	case "apikey":
 		if len(os.Args) != 7 {
-			fmt.Println("Usage: oscarcli apikey <action> <secret-name> <region> <api-key-name> <key-length(int)>")
+			fmt.Println("Usage: oscarcli apikey <action: create|update> <secret-name> <region> <api-key-name> <key-length(int)>")
 			os.Exit(1)
 		}
 
