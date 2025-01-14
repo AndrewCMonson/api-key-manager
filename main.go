@@ -113,14 +113,18 @@ func main() {
 
 		fmt.Printf("Secret successfully updated in AWS Secrets Manager under name %s\n", secretName)
 
-	// TODO: This should be updated to allow for api key generation regardless of secret name
 	case "apikey":
-		if len(os.Args) != 3 {
-			fmt.Println("Usage: oscarcli apikey <key-length(int)>")
+		if len(os.Args) != 7 {
+			fmt.Println("Usage: oscarcli apikey <action> <secret-name> <region> <api-key-name> <key-length(int)>")
 			os.Exit(1)
 		}
 
-		lengthParam := os.Args[2]
+		action := os.Args[2]
+		secretname := os.Args[3]
+		region := os.Args[4]
+		secretkey := os.Args[5]
+		lengthParam := os.Args[6]
+
 
 		length, err := strconv.Atoi(lengthParam)
 		if err != nil {
@@ -128,12 +132,24 @@ func main() {
 			os.Exit(1)
 		}
 
-		if err := secrets.HandleAPIGen(length); err != nil {
+		a, k, err := secrets.HandleAPIGen(action, secretname, region, secretkey, length)
+		if err != nil {
 			fmt.Printf("Error: %v\n", err)
 			os.Exit(1)
 		}
 
-		fmt.Printf("Oscar API key successfully updated!")
+		switch a {
+		case "create": 
+			fmt.Printf("API key successfully created!\nAWS Secret Name: %s\n%s:%s\n", secretname, secretkey, k)
+		 
+		case "update":
+			fmt.Printf("API key successfully updated!\nAWS Secret Name: %s\n%s:%s\n", secretname, secretkey, k)
+
+		default:
+			fmt.Printf("Unknown api key action\n")
+			os.Exit(1)
+		}
+	
 	
 		default:
 		fmt.Printf("Unknown command: %s\n", command)
