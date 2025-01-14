@@ -10,8 +10,8 @@ import (
 	"strings"
 
 	"github.com/AndrewCMonson/oscarcli/secrets"
+	awsconfig "github.com/AndrewCMonson/oscarcli/services/aws"
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 )
 
@@ -99,7 +99,7 @@ func CreateAndWriteSecretsFromEnv(secretname, region, filePath string) error {
 		fmt.Printf("Adding secret: %s=%s\n", key, value)
 	}
 
-	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
+	cfg, err := awsconfig.GetAWSConfig(region)
 	if err != nil {
 		return fmt.Errorf("failed to load AWS config: %w", err)
 	}

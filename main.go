@@ -125,7 +125,6 @@ func main() {
 		secretkey := os.Args[5]
 		lengthParam := os.Args[6]
 
-
 		length, err := strconv.Atoi(lengthParam)
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)

@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"os"
 
+	awsconfig "github.com/AndrewCMonson/oscarcli/services/aws"
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 )
 
@@ -23,18 +23,22 @@ type AWSSecret struct {
 // This function is meant to be used with a secret that contains key value pairs
 // if used with a plaintext, it will throw an error explaining the cli tool isn't compatible
 func getSecretFromSM(secretName, region string) (secret AWSSecret, err error) {
-	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
+	cfg, err := awsconfig.GetAWSConfig(region)
 	if err != nil {
 		return AWSSecret{}, fmt.Errorf("failed to load AWS config: %w", err)
 	}
 
 	client := secretsmanager.NewFromConfig(cfg)
-	var secrets AWSSecret
 	result, err := client.GetSecretValue(context.TODO(), &secretsmanager.GetSecretValueInput{
 		SecretId: aws.String(secretName),
 	})
 	if err != nil {
 		return AWSSecret{}, fmt.Errorf("failed to get secret value %w", err)
+	}
+
+	secrets := AWSSecret{
+		Name: *result.Name,
+		Value: *result.SecretString,
 	}
 
 	secrets.Name = *result.Name
