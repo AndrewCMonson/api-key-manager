@@ -106,27 +106,24 @@ func AddOrUpdateExistingSecret(secretName, region, key, value string) error {
 	return nil
 }
 
-func HandleAPIGen(action, secretname, region, key string, length int) (actionreturn, apikey string, err error) {
-	apiKey, err := generateAPIKey(length)
+func HandleAPIGen(action, secretname, region, key string, length int) (actionResult string, apikey string, err error) {
+	apikey, err = generateAPIKey(length)
 	if err != nil {
 		return "", "", fmt.Errorf("error generating API key: %v", err)
 	}
 
-	switch action {
+	switch actionResult = action; actionResult {
 	case "update":
-		if err := AddOrUpdateExistingSecret(secretname, region, key, apiKey); err != nil {
-			return "", "", fmt.Errorf("error: %v", err)
-		}
-
-		return action, apiKey, nil
+		err = AddOrUpdateExistingSecret(secretname, region, key, apikey)
 	case "create":
-		if err := CreateNewAWSSecret(secretname, region, key, apiKey); err != nil {
-			return "", "", fmt.Errorf("error: %v", err)
-		}
-
-		return action, apiKey, nil
-
+		err = CreateNewAWSSecret(secretname, region, key, apikey)
 	default:
 		return "", "", fmt.Errorf(`action must be either "update" or "create"`)
 	}
+
+	if err != nil {
+		return "", "", err
+	}
+
+	return
 }
