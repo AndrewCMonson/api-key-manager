@@ -34,7 +34,6 @@ OscarCLI is a command-line tool for managing AWS Secrets Manager secrets. It all
 
 - You must have configured AWS credentials on your machine. You can do this by running `aws configure` and following the prompts.
 - As of version 1.2.4, OscarCLI uses the credentials for AWS of the user running the command. This means that the user must have the necessary permissions to create, update, and retrieve secrets in AWS Secrets Manager.
-- Using the `apikey` command will update the user's `oscar-api` secret in AWS Secrets Manager. This will not update the master API key used by the Oscar API. Future versions of OscarCLI will include the ability to update the master API key, locked behind credential verification.
 - When using the `env-get` command, the `.env` file will be created in the current working directory. If the file already exists, it will be overwritten.
 - When using the `env-set` command, the `.env` file will be read from the specified path. If the file does not exist, an error will be thrown.
 
@@ -62,9 +61,9 @@ OscarCLI is a command-line tool for managing AWS Secrets Manager secrets. It all
     oscarcli update <secret-name> <region> <key> <value>
     ```
 
-- `apikey`: Generate a new API key and update the `oscar-api` secret in AWS Secrets Manager. Key length must be a valid integer.
+- `apikey`: Will either create or update a secret value as an api-key. If given the create argument, it will create a new AWS secret and then populate a key:value pair with the api-key-name and generated api-key based on the provided key name and length. If given the update argument, it will update an existing secret with the api-key-name and generated api-key based on the provided key name and length.
     ```sh
-    oscarcli apikey <key-length>
+    oscarcli apikey <action> <secret-name> <region> <api-key-name> <key-length(int)>
     ```
 
 ### Examples
@@ -96,7 +95,7 @@ OscarCLI is a command-line tool for managing AWS Secrets Manager secrets. It all
 
 - Generate a new API key:
     ```sh
-    oscarcli apikey 32
+    oscarcli apikey update my-secret us-east-1 my-api-key 32
     ```
 
 ## License
