@@ -8,8 +8,8 @@ import (
 	"errors"
 	"fmt"
 
+	awsconfig "github.com/AndrewCMonson/oscarcli/services/aws"
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager/types"
 )
@@ -32,7 +32,7 @@ func generateAPIKey(length int) (string, error) {
 }
 
 func CreateNewAWSSecret(secretName, region, key, value string) error {
-  cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
+	cfg, err := awsconfig.GetAWSConfig(region)
 	if err != nil {
 		return fmt.Errorf("failed to load AWS config: %w", err)
 	}
@@ -61,7 +61,7 @@ func CreateNewAWSSecret(secretName, region, key, value string) error {
 // AddOrUpdateExistingSecret adds a new key:value pair to an existing secret
 // or updates an existing key:value pair if the key already exists.
 func AddOrUpdateExistingSecret(secretName, region, key, value string) error {
-	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
+	cfg, err := awsconfig.GetAWSConfig(region)
 	if err != nil {
 		return fmt.Errorf("failed to load AWS config: %w", err)
 	}
