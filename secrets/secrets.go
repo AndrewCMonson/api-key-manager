@@ -1,7 +1,6 @@
 package secrets
 
 import (
-	// "bufio"
 	"context"
 	"crypto/rand"
 	"encoding/base64"
@@ -107,15 +106,27 @@ func AddOrUpdateExistingSecret(secretName, region, key, value string) error {
 	return nil
 }
 
-func HandleAPIGen(length int) error {
+func HandleAPIGen(action, secretname, region, key string, length int) (actionreturn, apikey string, err error) {
 	apiKey, err := generateAPIKey(length)
 	if err != nil {
-		return fmt.Errorf("error generating API key: %v", err)
+		return "", "", fmt.Errorf("error generating API key: %v", err)
 	}
 
-	if err := AddOrUpdateExistingSecret("oscar-api", "us-east-1", "OSCAR-API-KEY", apiKey); err != nil {
-		return fmt.Errorf("error: %v", err)
-	}
+	switch action {
+	case "update":
+		if err := AddOrUpdateExistingSecret(secretname, region, key, apiKey); err != nil {
+			return "", "", fmt.Errorf("error: %v", err)
+		}
 
-	return nil
+		return action, apiKey, nil
+	case "create":
+		if err := CreateNewAWSSecret(secretname, region, key, apiKey); err != nil {
+			return "", "", fmt.Errorf("error: %v", err)
+		}
+
+		return action, apiKey, nil
+
+	default:
+		return "", "", fmt.Errorf(`action must be either "update" or "create"`)
+	}
 }
