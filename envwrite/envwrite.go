@@ -41,9 +41,6 @@ func getSecretFromSM(secretName, region string) (secret AWSSecret, err error) {
 		Value: *result.SecretString,
 	}
 
-	secret.Name = *result.Name
-	secret.Value = *result.SecretString
-
 	return secret, nil
 }
 
