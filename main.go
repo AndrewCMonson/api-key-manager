@@ -10,7 +10,7 @@ import (
 	"github.com/AndrewCMonson/oscarcli/secrets"
 )
 
-const version = "1.4.0"
+const version = "1.4.1"
 
 func main() {
 	// Check if there are enough arguments
