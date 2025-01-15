@@ -22,7 +22,7 @@ type AWSSecret struct {
 // 
 // This function is meant to be used with a secret that contains key value pairs
 // if used with a plaintext, it will throw an error explaining the cli tool isn't compatible
-func getSecretFromSM(secretName, region string) (secret AWSSecret, err error) {
+func getSecretFromSM(secretName, region string) (AWSSecret, error) {
 	cfg, err := awsconfig.GetAWSConfig(region)
 	if err != nil {
 		return AWSSecret{}, fmt.Errorf("failed to load AWS config: %w", err)
@@ -36,7 +36,7 @@ func getSecretFromSM(secretName, region string) (secret AWSSecret, err error) {
 		return AWSSecret{}, fmt.Errorf("failed to get secret value %w", err)
 	}
 
-	secret = AWSSecret{
+	secret := AWSSecret{
 		Name: *result.Name,
 		Value: *result.SecretString,
 	}
