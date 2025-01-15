@@ -2,7 +2,6 @@ package awsconfig
 
 import (
 	"context"
-	"fmt"
 	"sync"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -10,21 +9,15 @@ import (
 )
 
 var (
-	awsConfig	  aws.Config
-	configErr error
+	awsCfg	  aws.Config
+	cfgErr 		error
 	once      sync.Once
 )
 
 func GetAWSConfig(region string) (aws.Config, error){
 	once.Do(func() {
-		awsConfig, configErr = config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
-		if configErr != nil {
-			configErr = fmt.Errorf("error loading AWS config: %w", configErr)
-		}
+		awsCfg, cfgErr = config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
 	})
-
-	if configErr != nil {
-		return aws.Config{}, configErr
-	}
-	return awsConfig, nil
+	
+	return awsCfg, cfgErr
 }
